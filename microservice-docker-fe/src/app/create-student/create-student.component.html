@@ -1,0 +1,43 @@
+ 
+ <section id="createStudent">
+      
+    <div class="col-lg-12 mx-auto">       
+      <div class="col-md-6 mx-auto" >
+          <h2 class="display-4 text-center mb-2">Create new student</h2>
+          <hr>
+  
+          <form [formGroup]="createStudentForm" (ngSubmit)="addStudent()">
+            <div class="form-group">
+              <label for="studentName">Student Name</label>
+              <input type="text"  required class="form-control" id="studentName" formControlName="studentName">
+              <small id="studentName" class="form-text text-muted">Please enter student to see if he is a part of our system</small>
+            </div>
+            <div class="form-group">
+              <label for="studentSurname">Student Surname</label>
+              <input type="text"  required class="form-control" id="studentSurname"  formControlName="studentSurname">
+              <small id="studentSurname" class="form-text text-muted">Please enter student to see if he is a part of our system</small>
+            </div>
+            <div class="form-group">
+              <label for="studentAge">Student Age</label>
+              <input type="number"  required class="form-control" id="studentAge" formControlName="studentAge">
+              <small id="studentAge" class="form-text text-muted">Please enter student to see if he is a part of our system</small>
+            </div>
+            <div class="form-group">
+              <label for="studentAddress">Student Address</label>
+              <input type="text"  required class="form-control" id="studentAddress"  formControlName="studentAddress">
+              <small id="studentAddress" class="form-text text-muted">Please enter student to see if he is a part of our system</small>
+            </div>
+            <div class="form-group">
+              <label for="scholasticYear">Scholastic Year</label>
+              <input type="number"  required class="form-control" id="scholasticYear" formControlName="scholasticYear">
+              <small id="scholasticYear" class="form-text text-muted">Please enter student to see if he is a part of our system</small>
+            </div>
+            <div class="offset-md-5">
+                <input type="submit" class="btn btn-primary col-md-5" >
+            </div>
+          </form>
+        
+      </div><!--end of form col 6-->
+    </div>
+  </section>
+  
