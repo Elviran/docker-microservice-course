@@ -14,7 +14,7 @@ services:
       MYSQL_ROOT_PASSWORD: abcdefgh
     ports:
     - 3306:3306
-    
+ 
     
 ```
 
