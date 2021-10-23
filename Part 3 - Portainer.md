@@ -2,6 +2,8 @@
 
 - So with a few commands we were able to run a mysql container and be able to clean up everything behind us. What if we had multiple containers to manage? It would make it a bit tedious to clean up after multiple containers, remove images or maybe finding which container your want to stop. We can solve this issue by making use of a tool called portainer.
 
+https://docs.portainer.io/v/ce-2.9/start/install/server/docker/linux
+
 - Portainer is tool that will help us manage anything related to the capabilities of docker such as:
   - Managing images
   - creation and deletion of containers 
@@ -125,19 +127,25 @@ CMD bash -c " npm install && npm install -g @angular/cli > /dev/null && ng serve
 
 ```bash
 # Lets create a new image called angular-development:1.0
- docker build . -t angular-development:1.0
+docker build -f Dockerfile.angular.develop -t angular-development:1.0 .
 
 # Lets now update our previous command to build a container with our new updated image and mount our code.
 docker run -v C:/Users/agius/Desktop/Docker-Microservice/docker-microservice-course/microservice-docker-fe/angular-app-student-fe/:/app -p 4200:4200 -d angular-development:1.0
 ```
 
 4. If we now edit any file, it should show that we have successfully mounted our code :) 
-
 5. However, if we try to run anything from our application, it needs to connect to our backend server which we still need to deploy.
+6. Lets now create a docker-compose file to load our stack! 
 
 
 
 
+
+
+
+```bash
+scp -r C:\Users\agius\Desktop\Docker-Microservice\docker-microservice-course\microservice-docker-fe root@ip172-18-0-16-c5q6effnjsv000ak4bgg@direct.labs.play-with-docker.com:/root/
+```
 
 
 
@@ -146,20 +154,23 @@ docker run -v C:/Users/agius/Desktop/Docker-Microservice/docker-microservice-cou
 - Create Directory ./mysql-scripts and create script.sql
 
 ```mysql
-CREATE TABLE school;
+CREATE DATABASE school;
 
 CREATE TABLE school.student (
      ID int NOT NULL AUTO_INCREMENT,
-     name varchar(255) NOT NULL,
+     `name` varchar(255) NOT NULL,
      surname varchar(255) NOT NULL,
      age int,
-     address varchar(255),
+     `address` varchar(255),
      scholastic_year int(4),
      PRIMARY KEY (ID)
 );
 
-Insert into school.student (ID, name, surname, age, address, scholastic_year)
-VALUES (1,'iris','curmi',27,'in the land of the gozitans', 2021)
+INSERT INTO school.student (ID, name, surname, age, address, scholastic_year)
+VALUES (1, 'Irisann', 'Curmi', 27, 'Santa Venera', 2020);
+
+INSERT into school.student (ID, name, surname, age, address, scholastic_year)
+VALUES (2, 'Axel', 'Curmi', 24, 'Hamrun', 2019);
 ```
 
 

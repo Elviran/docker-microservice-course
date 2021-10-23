@@ -1,35 +1,33 @@
-version: '3.1'
+version: "3.9"
 services:
   mysql:
     image: mysql:8
-    container_name: localhost-mysql
+    container_name: docker-mysql
     volumes:
     - ./sql-init/:/docker-entrypoint-initdb.d/
-    command: --default-authentication-plugin=mysql_native_password
     restart: always
     expose:
     - 3306
     environment:
       MYSQL_ROOT_PASSWORD: abcdefgh
-    ports:
-    - 3306:3306
+    command: --default-authentication-plugin=mysql_native_password
   frontend:
-    image: angular-development:1.0
+    image: node:lts
     container_name: docker-microservice-fe
+    expose:
+      - 4200
     ports:
       - 4200:4200
+    working_dir: /app
     volumes:
-        - ../../microservice-docker-fe/angular-app-student-fe/:/app/
+        - ../microservice-docker-fe/angular-app-student-fe/:/app/
+    command: bash -c "npm install && npm install -g @angular/cli > /dev/null && ng serve --host 0.0.0.0 --port 4200 "
   backend:
-    image: openjdk:11
+    image: maven:3.6.3-jdk-11
     container_name: docker-microservice-be
-    hostname: java_runner
-    volumes:
-        - ../../microservice-docker-be/target/microservice-docker-be-0.0.1-SNAPSHOT.jar:/usr/app/backend.jar
     working_dir: /usr/app/
-    ports:
-        - 8080:8080
-        - 5005:5005
-    command: java -jar -Xdebug -Xrunjdwp:transport=dt_socket,address=5005,server=y,suspend=n backend.jar --server.port=${serverport}
-    depends_on:
-        - samba 
+    volumes:
+        - ../microservice-docker-be/:/usr/app
+    expose: 
+      - 8080
+    command: mvn spring-boot:run

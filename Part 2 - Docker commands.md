@@ -2,6 +2,8 @@
 
 https://phoenixnap.com/kb/list-of-docker-commands-cheat-sheet
 
+If you have not been able to create a vm or install docker on windows. You can use https://labs.play-with-docker.com/ by creating an account with dockerhub.
+
 ## Docker Help
 
 If we write docker help, it will list all the commands that we can execute with docker. Lets for now start with the simple ones 
@@ -130,5 +132,13 @@ docker rm [container_id]
 
 ```
 docker rmi [image name]
+```
+
+
+
+
+
+```
+docker rm $(docker ps -a -q -f status=exited)
 ```
 

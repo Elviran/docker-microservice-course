@@ -5,10 +5,6 @@ FROM node:lts
 # Create app directory
 WORKDIR /app
 
-# Copy application dependencies, What copy does is it takes the chosen directory and copies it to the container.
-# COPY {directory_from_host} TO {directory_to_container}
-COPY ../microservice-docker-fe/ /app/
-
 # Application binds to port 4200
 EXPOSE 4200
 
@@ -21,4 +17,4 @@ RUN npm install -g @angular/cli
 # Our entrypoint for our container to run. Without this command, the container will be created with our newly created image but it shall instantly exit.
 # With the use of an entrypoint or cmd, the container can continue living while that process is still active. Once the process exits (either the application crashed, or the service has stopped)
 # The container automatically exits.
-CMD bash -c "npm install && npm install -g @angular/cli > /dev/null && ng serve --proxy-config proxy.conf.json"
+CMD bash -c "npm install && npm install -g @angular/cli > /dev/null && ng serve --host 0.0.0.0 --port 4200 "
