@@ -16,7 +16,7 @@ public class BeanConfig {
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUsername("root");
         dataSource.setPassword("abcdefgh");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/school?createDatabaseIfNotExist=true");
+        dataSource.setUrl("jdbc:mysql://docker-mysql:3306/school?createDatabaseIfNotExist=true");
 
         return dataSource;
     }

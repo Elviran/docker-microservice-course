@@ -8,15 +8,15 @@ export class StudentService {
     constructor(private http: HttpClient) { }
 
     getAll() {
-        return this.http.get<Student[]>(`http://localhost:8080/v1.0/students`);
+        return this.http.get<Student[]>(`http://docker-microservice-be:8080/v1.0/students`);
     }
 
     getStudent(id: string) {
-        return this.http.get<Student>(`http://localhost:8080/v1.0/student/${id}`)
+        return this.http.get<Student>(`http://docker-microservice-be:8080/v1.0/student/${id}`)
     }
 
     
     register(student: Student) {
-        return this.http.post(`http://localhost:8080/v1.0/students/create`, student);
+        return this.http.post(`http://docker-microservice-be:8080/v1.0/students/create`, student);
     }
 }
