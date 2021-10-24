@@ -7,7 +7,7 @@ WORKDIR /app
 
 # Copy application dependencies, What copy does is it takes the chosen directory and copies it to the container.
 # COPY {directory_from_host} TO {directory_to_container}
-COPY ./angular-app-student-fe /app
+COPY ./microservice-docker-fe/angular-app-student-fe /app
 
 # Application exposes port 4200
 EXPOSE 4200

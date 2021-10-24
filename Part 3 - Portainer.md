@@ -19,9 +19,9 @@ docker volume create portainer_data
 docker run -d -p 8000:8000 -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce
 ```
 
+- If you are using https://labs.play-with-docker.com/. Click on Open Port next to the IP and expose 9000, for the others lets open our browser and write http://localhost:9000
 
-
-- Lets take a look around portainer. Lets open our browser and write http://localhost:9000
+- Lets take a look around portainer.
   - Show in containers
   - Images
   - Networks
@@ -137,15 +137,19 @@ docker run -v C:/Users/agius/Desktop/Docker-Microservice/docker-microservice-cou
 5. However, if we try to run anything from our application, it needs to connect to our backend server which we still need to deploy.
 6. Lets now create a docker-compose file to load our stack! 
 
-
-
-
-
-
+7. If you are using https://labs.play-with-docker.com/. You need to upload the directory I have given you so that we would deploy a fully working stack.
 
 ```bash
 scp -r C:\Users\agius\Desktop\Docker-Microservice\docker-microservice-course\microservice-docker-fe root@ip172-18-0-16-c5q6effnjsv000ak4bgg@direct.labs.play-with-docker.com:/root/
 ```
+
+
+
+
+
+
+
+
 
 
 
