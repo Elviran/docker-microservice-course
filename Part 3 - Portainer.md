@@ -64,7 +64,7 @@ WORKDIR /app
 
 # Copy application dependencies, What copy does is it takes the chosen directory and copies it to the container.
 # COPY {directory_from_host} TO {directory_to_container}
-COPY ./angular-app-student-fe /app
+COPY ./frontend-app /app
 
 # Application exposes port 4200
 EXPOSE 4200
@@ -73,13 +73,14 @@ EXPOSE 4200
 # After npm installed our application, we shall also install angular/cli, @angular/cli is wrapper to npm to ease in component creation and also runnables.
 # The reason why I did this as a one line is because each command FROM, WORKDIR, COPY, RUN creates a new layer. A new layer is like a temporary container that executes
 # the command specified and then kills itself for the next step to take on from there and repeat the process. Think of it as building blocks. One block ontop of each other.
-RUN npm install -g @angular/cli
-RUN npm install 
+RUN npm install -g @angular/cli && npm install
 
 
 # Our command for our container to run. Without this command, the container will be created with our newly created image but it shall instantly exit.
-# With the use of ENTRYPOINT or CMD, the container can continue living while that process is still active. Once the process exits (either the application crashed, or the service has stopped) The container automatically exits.
-# The command below translates to bash {-c command} "{`ng serve` will start our angular application}" {--host to 0.0.0.0 as if this is left as localhost, we would not be able to access http://localhost:4200 on our browser as it won't bind correctly} {--port 4200}
+# With the use of ENTRYPOINT or CMD, the container can continue living while that process is still active. Once the process exits
+# (either the application crashed, or the service has stopped) The container automatically exits.
+# The command below translates to bash {-c command} "{`ng serve` will start our angular application}"
+# {--host to 0.0.0.0 as if this is left as localhost, we would not be able to access http://localhost:4200 on our browser as it won't bind correctly} {--port 4200}
 CMD bash -c "ng serve --host 0.0.0.0 --port 4200"
 ```
 
@@ -144,44 +145,4 @@ scp -r C:\Users\agius\Desktop\Docker-Microservice\docker-microservice-course\mic
 ```
 
 
-
-
-
-
-
-
-
-
-
-
-
-- Create Directory ./mysql-scripts and create script.sql
-
-```mysql
-CREATE DATABASE school;
-
-CREATE TABLE school.student (
-     ID int NOT NULL AUTO_INCREMENT,
-     `name` varchar(255) NOT NULL,
-     surname varchar(255) NOT NULL,
-     age int,
-     `address` varchar(255),
-     scholastic_year int(4),
-     PRIMARY KEY (ID)
-);
-
-INSERT INTO school.student (ID, name, surname, age, address, scholastic_year)
-VALUES (1, 'Irisann', 'Curmi', 27, 'Santa Venera', 2020);
-
-INSERT into school.student (ID, name, surname, age, address, scholastic_year)
-VALUES (2, 'Axel', 'Curmi', 24, 'Hamrun', 2019);
-```
-
-
-
-```bash
- docker build . -t docker-microservices-fe
- 
- docker run -dp 3000:3000 docker-microservices-fe
-```
 

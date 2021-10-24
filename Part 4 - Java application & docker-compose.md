@@ -1,6 +1,14 @@
 # Creating a docker-compose file to load our entire stack
 
-- 
+- Docker compose is a tool for defining and running multi-container applications. With docker-compose, we create a layout for our stack by configuring services and then with a single command, we can start all services defined into containers. Think as docker-compose as a wrapper on docker.
+
+1. Lets start by creating docker-compose file. `docker-compose.yml`
+
+   ​	- MYSQL
+
+   ​	- BACKEND
+
+   ​	- FRONTEND
 
 ```yaml
 version: "3.3"
@@ -28,7 +36,9 @@ services:
         - ../microservice-docker-be/:/usr/app
     expose: 
       - 8080
-    command: mvn spring-boot:run
+    ports:
+      - 8080:8080
+    command:  mvn spring-boot:run -D spring-boot.run.profiles=docker
   #Frontend Container
   frontend:
     image: node:lts
@@ -45,41 +55,115 @@ services:
     command: bash -c "npm install && npm install -g @angular/cli > /dev/null && ng serve --host 0.0.0.0 --port 4200 "
 ```
 
-2. Create directory sql-init and create file student-db.sql
+2) Lets start with some docker-compose commands
 
 ```bash
-CREATE DATABASE school;
+# Initializes images, cvolumes, networks and containers.
+docker-compose up --build
 
-CREATE TABLE school.student (
-     ID int NOT NULL AUTO_INCREMENT,
-     `name` varchar(255) NOT NULL,
-     surname varchar(255) NOT NULL,
-     age int,
-     `address` varchar(255),
-     scholastic_year int(4),
-     PRIMARY KEY (ID)
-);
+#Check containers in stack
+docker-compose ps
 
-INSERT INTO school.student (ID, name, surname, age, address, scholastic_year)
-VALUES (1, 'Irisann', 'Curmi', 27, 'Santa Venera', 2020);
+         Name                       Command               State                    Ports
+----------------------------------------------------------------------------------------------------------
+docker-microservice-be   /usr/local/bin/mvn-entrypo ...   Up      8080/tcp
+docker-microservice-fe   docker-entrypoint.sh bash  ...   Up      0.0.0.0:4200->4200/tcp,:::4200->4200/tcp
+docker-mysql             docker-entrypoint.sh --def ...   Up      3306/tcp, 33060/tcp
 
-INSERT into school.student (ID, name, surname, age, address, scholastic_year)
-VALUES (2, 'Axel', 'Curmi', 24, 'Hamrun', 2019);
+# Kill all containers in stack.
+docker-compose kill
+
+#Stops containers and removes containers, networks, volumes, and images created by up.
+docker-compose down
+
+#launch only one container
+docker-compose up mysql
+
+#view logs in stack
+docker-compose logs
+
+#Lets down everything again and move on to the next step.
+docker-compose down
 
 ```
 
+3. There is also a way that instead of editting stuff directly from the docker-compose file, we can create a file `.env` to store environment variables  and store the port, code directory and command so that as much as possible we do not mess anything with the compose file.
 
+```properties
+#mysql
+MYSQL_PASSWORD=abcdefgh
 
-    ```bash
-    docker-compose up --build
-    ```
+# backend application environment file
+BACKEND_DIRECTORY=..\microservice-docker-be
+BACKEND_PORT=8080
+BACKEND_COMMAND=mvn spring-boot:run -D spring-boot.run.profiles=docker
 
-TODO:
+#frontend application environment file
+UI_DIRECTORY=../microservice-docker-fe/angular-app-student-fe/
+UI_PORT=4200
+UI_COMMAND=bash -c 'npm install && npm install -g @angular/cli > /dev/null && ng serve --host 0.0.0.0 --port ${UI_PORT}'
 
-- Add .env file
-- Add properties to connect with db in backend app and in frontend app
-- Add restart setting
-- Create Network and demonstrate how containers communicate with each other inside but not those containers outside the network. 
-- network mode : host . Maps everything to use host network instead. 
-- Show host setting (remember to change configurations)
+```
 
+4. Lets Alter the docker-compose.yml file now to use our new created environment variables.
+
+```yaml
+version: "3.3"
+networks:
+  school-application-stack:
+services:
+  #MYSQL Container
+  mysql:
+    image: mysql:8
+    container_name: docker-mysql
+    volumes:
+      - ./sql-init/:/docker-entrypoint-initdb.d/
+    restart: always
+    networks: 
+      - school-application-stack
+    expose:
+      - 3306
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+    command: --default-authentication-plugin=mysql_native_password
+  #Backend Container
+  backend:
+    image: maven:3.6.3-jdk-11
+    container_name: docker-microservice-be
+    working_dir: /usr/app/
+    networks: 
+      - school-application-stack
+    volumes:
+      - ${BACKEND_DIRECTOR}:/usr/app
+    expose: 
+      - ${BACKEND_PORT}
+    command:  ${BACKEND_COMMAND}
+  #Frontend Container
+  frontend:
+    image: node:lts
+    container_name: docker-microservice-fe
+    working_dir: /app 
+    networks: 
+      - school-application-stack
+    expose:
+      - ${CONTAINERPORT}
+    ports:
+      - ${HOSTUIPORT}:${CONTAINERPORT}
+    volumes:
+        - ${UIDIRECTORY}:/app/
+    command: ${UICOMMAND}
+```
+
+```bash
+# Lets use some docker-compose commands to verify that our docker-compose file has everything working.
+# Config will show that our environment variables have been replaced with the actual values inside the docker-compose. If the environment variable is not initialized correctly, docker-compose will warn you or else using config you can see any missing information.
+docker-compose -f .\docker-compose.v2.yml config
+
+docker-compose -f .\docker-compose.v2.yml up --build
+```
+
+Any Questions please do not hesitate to message me and we can go through anything together! 
+
+Thank you for who ever is reading this and kind regards,
+
+Irisann Curmi

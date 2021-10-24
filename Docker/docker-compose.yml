@@ -23,7 +23,9 @@ services:
         - ../microservice-docker-be/:/usr/app
     expose: 
       - 8080
-    command: mvn spring-boot:run
+    ports:
+      - 8080:8080
+    command:  mvn spring-boot:run -D spring-boot.run.profiles=docker
   #Frontend Container
   frontend:
     image: node:lts
